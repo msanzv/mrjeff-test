@@ -3,26 +3,27 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use AppBundle\Entity\User;
+use GuzzleHttp\Client;
 
 class UsersController extends Controller
 {
     /**
-     * @Route("/users/list", name="users_list")
+     * @Route("/users", name="users_list")
      */
     public function listUsersAction()
     {
         /* /usr/local/php5/bin/php */
-        $number = mt_rand(0, 100);
+        $client = new Client(['base_uri' => 'https://jsonplaceholder.typicode.com']);
 
-        // $users = new Request('https://jsonplaceholder.typicode.com/users', 'GET'); 
-        $user = new User(1, 'Paco');
+        $response = $client->request('GET', 'users');
+        $users = json_decode($response->getBody());
 
         return $this->render('users/list.html.twig', array(
-          "user" => $user
+          "users" => $users
         ));
     }
 }
