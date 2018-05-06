@@ -6,19 +6,26 @@
       <tr>
         <th>ID</th>
         <th>Name</th>
+        <th>Username</th>
         <th>Email</th>
+        <th>Phone</th>
         <th>Website</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
     {% for user in users %}
-      <tr>
+      <tr data-user-id="{{user.id}}">
           <td>{{ user.id }}</td>
           <td>{{ user.name }}</td>
+          <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
+          <td>{{ user.phone }}</td>
           <td>{{ user.website }}</td>
-          <td>...</td>
+          <td>
+            <a class="js-user-delete" href="#">Delete</a>
+            {# <a class="js-user-delete2" href='{{ path('users_delete', {'userId': user.id}) }}'>Delete</a> #}
+          </td>
       </tr>
     {% endfor %}
   </table>
@@ -33,8 +40,30 @@
   {{ parent() }}
 
   <script>
-  $(document).ready( function () {
-      $('#usersTable').DataTable();
+  function deleteUser (userId) {
+    return new Promise(function (resolve, reject) {
+      // La alternativa sería llamar a la action del controlador usando FOSJsRoutingBundle
+      $.ajax({
+        url: 'https://jsonplaceholder.typicode.com/users/' + userId,
+        type: 'delete',
+        success: function (response) {
+          resolve(userId)
+        }
+      })
+    });
+  }
+
+  $(document).ready(function () {
+    var table = $('#usersTable').DataTable();
+
+    $('#usersTable').on('click', '.js-user-delete', function () {
+      var row = $(this).closest('tr');
+
+      deleteUser(row.data('user-id'))
+        .then(function (userId) {
+          row.remove();
+        });
+    });
   });
   </script>
 {% endblock %}
