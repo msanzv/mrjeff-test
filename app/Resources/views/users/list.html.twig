@@ -29,6 +29,9 @@
       </tr>
     {% endfor %}
   </table>
+
+
+  <div id="usersTable2"></div>
 {% endblock %}
 
 {% block stylesheets %}
@@ -39,7 +42,8 @@
 {% block javascripts %}
   {{ parent() }}
 
-  <script>
+  <script type="text/javascript">
+
   function deleteUser (userId) {
     return new Promise(function (resolve, reject) {
       // La alternativa sería llamar a la action del controlador usando FOSJsRoutingBundle
@@ -65,5 +69,18 @@
         });
     });
   });
+
+  /*
+  import Vue from '/node_modules/vue/dist/vue';
+  import UsersTable from '/vue/components/UsersTable';
+
+  new Vue({
+    el: '#usersTable2',
+    render: function (h) {
+      return h(UsersTable, props: { users: {{ users|json_encode|raw }} });
+    }
+  });
+  */
+
   </script>
 {% endblock %}

@@ -17,7 +17,6 @@ class UsersController extends Controller
      */
     public function listUsersAction()
     {
-        /* /usr/local/php5/bin/php */
         $client = new Client(['base_uri' => 'https://jsonplaceholder.typicode.com']);
 
         $response = $client->request('GET', 'users');
